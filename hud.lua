@@ -14,7 +14,7 @@ m.yoff = -16
 function m.register(name, def)
     def.name = name
     def.yoff = m.yoff
-    m.yoff = m.yoff - 8
+    m.yoff = m.yoff - 16
 
     m.registered[name] = def
 end

@@ -5,3 +5,4 @@ function tigris.include(p)
 end
 
 tigris.include("hud.lua")
+tigris.include("damage.lua")

@@ -17,6 +17,10 @@ function m.apply(obj, damage)
     obj:set_hp(obj:get_hp() - total)
 end
 
+function m.register(n, f)
+    m.handlers[n] = f
+end
+
 tigris.damage.register("fleshy", function(obj, value)
     local armor = obj:get_armor_groups()
     return value * ((armor.fleshy or 100) / 100)

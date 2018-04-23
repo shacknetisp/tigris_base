@@ -22,10 +22,11 @@ end
 -- Update element for player.
 function m.update(name, player, value, max_value)
     local r = m.registered[name]
-    if type(value) == "number" then
-        value = max(0, max_value and min(value, max_value) or value)
-    end
     if r.type == "text" then
+        if type(value) == "number" and max_value then
+            value = ("%.1f/%1.f"):format(value, max_value)
+        end
+
         local hud = m.values[name .. ":" .. player:get_player_name()]
         player:hud_change(hud, "text", value)
     end

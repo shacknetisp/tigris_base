@@ -8,8 +8,8 @@ m.registered = {}
 m.values = {}
 
 -- Y offset for basic text.
-m.yoff = -16
-m.byoff = -16
+m.yoff = -48
+m.byoff = -24
 
 local hudbar_mod = ""
 if minetest.get_modpath("hudbars") then
@@ -30,7 +30,7 @@ function m.register(name, def)
             }, 0, 0, false, "%s: %d/%d")
         else
             def.byoff = m.byoff
-            m.byoff = m.byoff - 16
+            m.byoff = m.byoff - 24
         end
     end
 
@@ -78,7 +78,7 @@ minetest.register_on_joinplayer(function(player)
                     size = {x = 24, y = 24},
                     text = v.texture .. "_icon.png",
                     alignment = {x = -1, y = -1},
-                    offset = {x = -266, y = -132 - v.byoff},
+                    offset = {x = -266, y = -96 + v.byoff},
                     number = 0,
                     max = 20,
                 })

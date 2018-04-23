@@ -9,8 +9,8 @@ function m.apply(obj, damage)
     -- Sum basic damage from handlers.
     local total = 0
     for k,v in pairs(damage) do
-        assert(m.damage_handlers[k])
-        total = total + m.damage_handlers[k](obj, v)
+        assert(m.handlers[k])
+        total = total + m.handlers[k](obj, v)
     end
 
     -- Apply basic damage.
@@ -24,4 +24,12 @@ end
 tigris.damage.register("fleshy", function(obj, value)
     local armor = obj:get_armor_groups()
     return value * ((armor.fleshy or 100) / 100)
+end)
+
+tigris.damage.register("cold", function(obj, value)
+    return value
+end)
+
+tigris.damage.register("heat", function(obj, value)
+    return value
 end)

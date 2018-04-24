@@ -6,13 +6,17 @@ m.handlers = {}
 
 -- Damage player by table of damage types.
 function m.apply(obj, damage)
+    -- Don't damage immortal objects.
+    if (obj:get_armor_groups().immortal or 0) > 0 then
+        return
+    end
+
     -- Sum basic damage from handlers.
     local total = 0
     for k,v in pairs(damage) do
         assert(m.handlers[k])
         total = total + m.handlers[k](obj, v)
     end
-
     -- Apply basic damage.
     obj:set_hp(obj:get_hp() - total)
 end

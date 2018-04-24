@@ -62,8 +62,7 @@ function tigris.register_projectile(name, def)
                     end
 
                     local player_ok = not obj:is_player() or obj:get_player_name() ~= self.owner or alive > 1
-                    local immortal = obj:get_armor_groups().immortal
-                    if player_ok and ((not immortal) or immortal <= 0) then
+                    if player_ok then
                         if def.on_entity_hit and def.on_entity_hit(self, obj) then
                             self.object:remove()
                             return

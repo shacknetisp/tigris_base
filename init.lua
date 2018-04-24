@@ -6,3 +6,4 @@ end
 
 tigris.include("hud.lua")
 tigris.include("damage.lua")
+tigris.include("projectiles.lua")

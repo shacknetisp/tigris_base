@@ -12,23 +12,24 @@ function tigris.register_projectile(name, def)
         visual_size = {x = 0.4, y = 0.4},
         textures = {def.texture},
         collisionbox = {0,0,0,0,0,0},
+        static_save = false,
 
-        created = 0,
+        _created = 0,
 
         on_step = function(self, dtime)
-            local alive = os.time() - self.created
+            local alive = os.time() - self._created
             if alive > timeout then
                 self.object:remove()
                 return
             end
 
             local pos = self.object:getpos()
-            local diff = vector.new(pos.x - self.last_pos.x, pos.y - self.last_pos.y, pos.z - self.last_pos.z)
-            local dir = vector.apply(diff, function(a) return (a / math.abs(a)) * 0.5 end)
+            local diff = vector.new(pos.x - self._last_pos.x, pos.y - self._last_pos.y, pos.z - self._last_pos.z)
+            local dir = vector.apply(diff, function(a) return (a / math.abs(a)) * 0.25 end)
 
-            for x=self.last_pos.x,pos.x,dir.x do
-            for y=self.last_pos.y,pos.y,dir.y do
-            for z=self.last_pos.z,pos.z,dir.z do
+            for x=self._last_pos.x,pos.x,dir.x do
+            for y=self._last_pos.y,pos.y,dir.y do
+            for z=self._last_pos.z,pos.z,dir.z do
                 local point = vector.new(x, y, z)
                 local node = minetest.get_node(point)
                 if node.name == "ignore" then
@@ -57,12 +58,8 @@ function tigris.register_projectile(name, def)
                             break
                         end
                     end
-                    if not collide then
-                        break
-                    end
-
-                    local player_ok = not obj:is_player() or obj:get_player_name() ~= self.owner or alive > 1
-                    if player_ok then
+                    local player_ok = not obj:is_player() or obj:get_player_name() ~= self._owner or alive > 1
+                    if collide and player_ok then
                         if def.on_entity_hit and def.on_entity_hit(self, obj) then
                             self.object:remove()
                             return
@@ -73,7 +70,7 @@ function tigris.register_projectile(name, def)
             end
             end
 
-            self.last_pos = pos
+            self._last_pos = pos
         end,
     })
 end
@@ -83,8 +80,8 @@ function tigris.create_projectile(name, def)
     obj:setvelocity(def.velocity)
     obj:setacceleration(vector.new(0, -8.5 * (def.gravity or 0), 0))
     local ent = obj:get_luaentity()
-    ent.last_pos = obj:getpos()
-    ent.owner = def.owner
-    ent.created = os.time()
+    ent._last_pos = obj:getpos()
+    ent._owner = def.owner
+    ent._created = os.time()
     return obj
 end

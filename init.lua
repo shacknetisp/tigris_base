@@ -6,7 +6,7 @@ end
 
 -- Danger level increases by 1 every <x> distance from 0,0,0.
 local start = minetest.string_to_pos(minetest.settings:get("tigris.world_center")) or vector.new(0, 0, 0)
-local scale = tonumber(minetest.settings:get("tigris.level_scale")) or 200
+local scale = tonumber(minetest.settings:get("tigris.level_scale")) or 500
 
 function tigris.danger_level(pos)
     return math.floor(vector.distance(pos, start) / scale) + 1

@@ -5,7 +5,7 @@ tigris.damage = m
 m.handlers = {}
 
 -- Damage player by table of damage types.
-function m.apply(obj, damage)
+function m.apply(obj, damage, blame)
     -- Don't damage immortal objects.
     if (obj:get_armor_groups().immortal or 0) > 0 then
         return
@@ -22,7 +22,7 @@ function m.apply(obj, damage)
     obj:set_hp(obj:get_hp() - total)
 
     if not obj:is_player() and obj:get_luaentity().tigris_mob then
-        obj:get_luaentity():on_punch()
+        obj:get_luaentity():on_punch(blame)
     end
 end
 

@@ -58,8 +58,10 @@ function tigris.register_projectile(name, def)
                             break
                         end
                     end
-                    local player_ok = not obj:is_player() or obj:get_player_name() ~= self._owner or alive > 1
-                    if collide and player_ok then
+                    local self_player = obj:is_player() and obj:get_player_name() == self._owner
+                    local self_mob = not obj:is_player() and obj:get_luaentity().tigris_mob and obj:get_luaentity().uid == self._owner
+                    local owner_ok = ((not self_player) and (not self_mob)) or alive > 1
+                    if collide and owner_ok then
                         if def.on_entity_hit and def.on_entity_hit(self, obj) then
                             self.object:remove()
                             return
@@ -82,6 +84,7 @@ function tigris.create_projectile(name, def)
     local ent = obj:get_luaentity()
     ent._last_pos = obj:getpos()
     ent._owner = def.owner
+    ent._owner_object = def.owner_object
     ent._created = os.time()
     return obj
 end

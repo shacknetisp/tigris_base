@@ -17,8 +17,13 @@ function m.apply(obj, damage)
         assert(m.handlers[k])
         total = total + m.handlers[k](obj, v)
     end
+
     -- Apply basic damage.
     obj:set_hp(obj:get_hp() - total)
+
+    if not obj:is_player() and obj:get_luaentity().tigris_mob then
+        obj:get_luaentity():on_punch()
+    end
 end
 
 function m.register(n, f)

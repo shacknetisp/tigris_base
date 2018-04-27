@@ -44,6 +44,13 @@ function tigris.register_projectile(name, def)
                     end
                 end
 
+                if minetest.get_item_group(node.name, "liquid") > 0 then
+                    if def.on_liquid_hit and def.on_liquid_hit(self, point) then
+                        self.object:remove()
+                        return
+                    end
+                end
+
                 local objs = minetest.get_objects_inside_radius(point, 6)
                 for _, obj in pairs(objs) do
                     local bb = obj:get_properties().collisionbox

@@ -26,6 +26,28 @@ function m.apply(obj, damage, blame)
     end
 end
 
+function m.friendly(a, b)
+    local fa
+    local fb
+    if a:is_player() then
+        fa = tigris.player.faction(a:get_player_name())
+    elseif a:get_luaentity() and a:get_luaentity().tigris_mob then
+        fa = a:get_luaentity().faction
+    else
+        return true
+    end
+
+    if b:is_player() then
+        fb = tigris.player.faction(b:get_player_name())
+    elseif b:get_luaentity() and b:get_luaentity().tigris_mob then
+        fb = b:get_luaentity().faction
+    else
+        return true
+    end
+
+    return fa and fb and fa == fb
+end
+
 function m.register(n, f)
     m.handlers[n] = f
 end

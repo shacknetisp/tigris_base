@@ -37,6 +37,13 @@ function tigris.register_projectile(name, def)
                     return
                 end
 
+                if node.name ~= "air" then
+                    if def.on_any_hit and def.on_any_hit(self, point) then
+                        self.object:remove()
+                        return
+                    end
+                end
+
                 if not passable(node.name) then
                     if def.on_node_hit and def.on_node_hit(self, point) then
                         self.object:remove()

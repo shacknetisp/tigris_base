@@ -9,8 +9,11 @@ m.list = {}
 
 -- Damage player by table of damage types.
 function m.apply(obj, damage, blame)
+    local lent = obj.get_luaentity and obj:get_luaentity()
+
     -- Don't damage immortal objects.
-    if (obj:get_armor_groups().immortal or 0) > 0 then
+    -- Must except immortal mobs, because for some reason mobs redo sets them to immortal.
+    if (obj:get_armor_groups().immortal or 0) > 0 and not lent._cmi_is_mob then
         return
     end
 
@@ -21,11 +24,17 @@ function m.apply(obj, damage, blame)
         total = total + m.handlers[k](obj, v)
     end
 
-    -- Apply basic damage.
-    obj:set_hp(obj:get_hp() - total)
-
-    if not obj:is_player() and obj:get_luaentity().tigris_mob then
-        obj:get_luaentity():on_punch(blame)
+    if obj:is_player() then
+        -- Apply basic damage.
+        obj:set_hp(obj:get_hp() - total)
+    else
+        if lent and lent.tigris_mob then
+            obj:set_hp(obj:get_hp() - total)
+            lent:on_punch(blame)
+        else
+            -- Just pass damage directly to punch.
+            obj:punch(blame, 1, {full_punch_interval = 1, damage_groups = damage})
+        end
     end
 end
 

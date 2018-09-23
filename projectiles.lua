@@ -9,7 +9,7 @@ function tigris.register_projectile(name, def)
         physical = false,
         hp_max = 1,
         visual = "sprite",
-        visual_size = {x = 0.4, y = 0.4},
+        visual_size = {x = 0.4 * (def.size or 1), y = 0.4 * (def.size or 1)},
         textures = {def.texture},
         collisionbox = {0,0,0,0,0,0},
         static_save = false,

@@ -32,8 +32,8 @@ function m.apply(obj, damage, blame)
             obj:set_hp(obj:get_hp() - total)
             lent:on_punch(blame)
         else
-            -- Just pass damage directly to punch.
-            obj:punch(blame, 1, {full_punch_interval = 1, damage_groups = damage})
+            -- Pass damage directly as fleshy (universal type).
+            obj:punch(blame, 1, {full_punch_interval = 1, damage_groups = {fleshy = total}})
         end
     end
 end

@@ -11,9 +11,8 @@ m.list = {}
 function m.apply(obj, damage, blame)
     local lent = obj.get_luaentity and obj:get_luaentity()
 
-    -- Don't damage immortal objects.
-    -- Must except immortal mobs, because for some reason mobs redo sets them to immortal.
-    if (obj:get_armor_groups().immortal or 0) > 0 and not lent._cmi_is_mob then
+    -- Check invulnerable group.
+    if (obj:get_armor_groups().invulnerable or 0) > 0 then
         return
     end
 

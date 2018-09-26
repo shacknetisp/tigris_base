@@ -18,7 +18,7 @@ function tigris.register_projectile(name, def)
 
         on_step = function(self, dtime)
             local alive = os.time() - self._created
-            if alive > timeout then
+            if alive > (self.timeout_override or timeout) then
                 self.object:remove()
                 return
             end

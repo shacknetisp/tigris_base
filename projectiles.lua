@@ -159,6 +159,10 @@ function tigris.register_projectile(name, def)
             end
 
             self._last_pos = pos
+
+            if def.on_step then
+                def.on_step(self)
+            end
         end,
     })
 end

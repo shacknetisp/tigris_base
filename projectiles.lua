@@ -5,6 +5,15 @@ end
 
 function tigris.register_projectile(name, def)
     local timeout = def.timeout or 30
+
+    local function remove(self)
+        if self._forceload then
+            minetest.forceload_free_block(self._forceload)
+            self._forceload = nil
+        end
+        self.object:remove()
+    end
+
     minetest.register_entity(name, {
         physical = false,
         hp_max = 1,
@@ -29,6 +38,13 @@ function tigris.register_projectile(name, def)
         end,
 
         get_staticdata = function(self)
+            if def.load_map then
+                if self._forceload then
+                    minetest.forceload_free_block(self._forceload)
+                end
+                self._forceload = self.object:getpos()
+                minetest.forceload_block(self._forceload)
+            end
             local t = {}
             for k,v in pairs(self) do
                 -- Only save custom properties.
@@ -39,13 +55,20 @@ function tigris.register_projectile(name, def)
             return minetest.serialize(t)
         end,
 
+        on_death = function(self)
+            if self._forceload then
+                minetest.forceload_free_block(self._forceload)
+                self._forceload = nil
+            end
+        end,
+
         on_step = function(self, dtime)
             local alive = os.time() - self._created
             if alive > (self.timeout_override or timeout) then
                 if def.on_timeout then
                     def.on_timeout(self)
                 end
-                self.object:remove()
+                remove(self)
                 return
             end
 
@@ -74,17 +97,14 @@ function tigris.register_projectile(name, def)
                                 end
                             end
                             if ok then
-                                minetest.emerge_area(point, point, function()
-                                    self._forceload = point
-                                    minetest.forceload_block(self._forceload)
-                                end)
+                                minetest.emerge_area(point, point)
                             else
-                                self.object:remove()
+                                remove(self)
                             end
                             return
                         end
                     else
-                        self.object:remove()
+                        remove(self)
                         return
                     end
                 end
@@ -93,21 +113,21 @@ function tigris.register_projectile(name, def)
                     self._last_air = vector.round(point)
                 else
                     if def.on_any_hit and def.on_any_hit(self, point) then
-                        self.object:remove()
+                        remove(self)
                         return
                     end
                 end
 
                 if not passable(node.name) then
                     if def.on_node_hit and def.on_node_hit(self, point) then
-                        self.object:remove()
+                        remove(self)
                         return
                     end
                 end
 
                 if minetest.get_item_group(node.name, "liquid") > 0 then
                     if def.on_liquid_hit and def.on_liquid_hit(self, point) then
-                        self.object:remove()
+                        remove(self)
                         return
                     end
                 end
@@ -131,7 +151,7 @@ function tigris.register_projectile(name, def)
                     local owner_ok = ((not self_player) and (not self_mob)) or alive > 1
                     if collide and owner_ok then
                         if def.on_entity_hit and def.on_entity_hit(self, obj) then
-                            self.object:remove()
+                            remove(self)
                             return
                         end
                     end

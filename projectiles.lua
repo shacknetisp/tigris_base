@@ -76,7 +76,7 @@ function tigris.register_projectile(name, def)
             local diff = vector.new(pos.x - self._last_pos.x, pos.y - self._last_pos.y, pos.z - self._last_pos.z)
             local dir = vector.apply(vector.apply(diff, function(a)
                 if a < 0 then
-                    return math.min(a, 0.05)
+                    return math.min(a, -0.05)
                 else
                     return math.max(a, 0.05)
                 end
@@ -136,27 +136,29 @@ function tigris.register_projectile(name, def)
                     end
                 end
 
-                local objs = minetest.get_objects_inside_radius(point, 6)
-                for _, obj in pairs(objs) do
-                    local bb = obj:get_properties().collisionbox
-                    local pp = obj:getpos()
-                    local b1 = vector.add(pp, vector.multiply({x=bb[1], y=bb[2], z=bb[3]}, 1.5))
-                    local b2 = vector.add(pp, vector.multiply({x=bb[4], y=bb[5], z=bb[6]}, 1.5))
+                if def.on_entity_hit then
+                    local objs = minetest.get_objects_inside_radius(point, 6)
+                    for _, obj in pairs(objs) do
+                        local bb = obj:get_properties().collisionbox
+                        local pp = obj:getpos()
+                        local b1 = vector.add(pp, vector.multiply({x=bb[1], y=bb[2], z=bb[3]}, 1.5))
+                        local b2 = vector.add(pp, vector.multiply({x=bb[4], y=bb[5], z=bb[6]}, 1.5))
 
-                    local collide = true
-                    for _,c in ipairs({"x" ,"y", "z"}) do
-                        if point[c] < b1[c] or point[c] > b2[c] then
-                            collide = false
-                            break
+                        local collide = true
+                        for _,c in ipairs({"x" ,"y", "z"}) do
+                            if point[c] < b1[c] or point[c] > b2[c] then
+                                collide = false
+                                break
+                            end
                         end
-                    end
-                    local self_player = obj:is_player() and obj:get_player_name() == self._owner
-                    local self_mob = not obj:is_player() and obj:get_luaentity().tigris_mob and obj:get_luaentity().uid == self._owner
-                    local owner_ok = ((not self_player) and (not self_mob)) or alive > 1
-                    if collide and owner_ok then
-                        if def.on_entity_hit and def.on_entity_hit(self, obj) then
-                            remove(self)
-                            return
+                        local self_player = obj:is_player() and obj:get_player_name() == self._owner
+                        local self_mob = not obj:is_player() and obj:get_luaentity().tigris_mob and obj:get_luaentity().uid == self._owner
+                        local owner_ok = ((not self_player) and (not self_mob)) or alive > 1
+                        if collide and owner_ok then
+                            if def.on_entity_hit and def.on_entity_hit(self, obj) then
+                                remove(self)
+                                return
+                            end
                         end
                     end
                 end

@@ -74,7 +74,13 @@ function tigris.register_projectile(name, def)
 
             local pos = self.object:getpos()
             local diff = vector.new(pos.x - self._last_pos.x, pos.y - self._last_pos.y, pos.z - self._last_pos.z)
-            local dir = vector.apply(diff, function(a) return ((a == 0) and 0 or (a / math.abs(a))) * 0.25 end)
+            local dir = vector.apply(vector.apply(diff, function(a)
+                if a < 0 then
+                    return math.min(a, 0.05)
+                else
+                    return math.max(a, 0.05)
+                end
+            end), function(a) return (a / math.abs(a)) * 0.25 end)
 
             for x=self._last_pos.x,pos.x,dir.x do
             for y=self._last_pos.y,pos.y,dir.y do

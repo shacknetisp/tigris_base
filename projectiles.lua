@@ -64,7 +64,7 @@ function tigris.register_projectile(name, def)
 
         on_step = function(self, dtime)
             local alive = os.time() - self._created
-            if alive > (self.timeout_override or timeout) then
+            if alive > (self._timeout_override or timeout) then
                 if def.on_timeout then
                     def.on_timeout(self)
                 end
@@ -74,7 +74,7 @@ function tigris.register_projectile(name, def)
 
             local pos = self.object:getpos()
             local diff = vector.new(pos.x - self._last_pos.x, pos.y - self._last_pos.y, pos.z - self._last_pos.z)
-            local dir = vector.apply(diff, function(a) return (a / math.abs(a)) * 0.25 end)
+            local dir = vector.apply(diff, function(a) return ((a == 0) and 0 or (a / math.abs(a))) * 0.25 end)
 
             for x=self._last_pos.x,pos.x,dir.x do
             for y=self._last_pos.y,pos.y,dir.y do

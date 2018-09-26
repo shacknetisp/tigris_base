@@ -37,7 +37,9 @@ function tigris.register_projectile(name, def)
                     return
                 end
 
-                if node.name ~= "air" then
+                if node.name == "air" then
+                    self.last_air = vector.round(point)
+                else
                     if def.on_any_hit and def.on_any_hit(self, point) then
                         self.object:remove()
                         return

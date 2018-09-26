@@ -72,8 +72,6 @@ function tigris.register_projectile(name, def)
                 return
             end
 
-            print(alive, minetest.pos_to_string(self.object:getvelocity()), minetest.pos_to_string(self.object:getpos()))
-
             local pos = self.object:getpos()
             local diff = vector.new(pos.x - self._last_pos.x, pos.y - self._last_pos.y, pos.z - self._last_pos.z)
             local dir = vector.apply(diff, function(a) return (a / math.abs(a)) * 0.25 end)

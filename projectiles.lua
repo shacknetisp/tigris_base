@@ -63,7 +63,7 @@ function tigris.register_projectile(name, def)
         end,
 
         on_step = function(self, dtime)
-            local alive = os.time() - self._created
+            local alive = minetest.get_gametime() - self._created
             if alive > (self._timeout_override or timeout) then
                 if def.on_timeout then
                     def.on_timeout(self)
@@ -184,6 +184,6 @@ function tigris.create_projectile(name, def)
     ent._last_pos = obj:getpos()
     ent._owner = def.owner
     ent._owner_object = def.owner_object
-    ent._created = os.time()
+    ent._created = minetest.get_gametime()
     return obj
 end

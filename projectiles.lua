@@ -113,22 +113,21 @@ function tigris.register_projectile(name, def)
                     end
                 end
 
-                local passable
+                local pass = passable(node.name)
+                if pass then
+                    self._last_passable = vector.round(point)
+                end
 
                 if node.name == "air" then
                     self._last_air = vector.round(point)
                 else
-                    passable = passable(node.name)
-                    if passable then
-                        self._last_passable = vector.round(point)
-                    end
                     if def.on_any_hit and def.on_any_hit(self, point) then
                         remove(self)
                         return
                     end
                 end
 
-                if not passable then
+                if not pass then
                     if def.on_node_hit and def.on_node_hit(self, point) then
                         remove(self)
                         return

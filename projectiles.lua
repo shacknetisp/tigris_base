@@ -176,7 +176,8 @@ function tigris.register_projectile(name, def)
 end
 
 function tigris.create_projectile(name, def)
-    local obj = minetest.add_entity(vector.add(def.pos, vector.multiply(def.velocity, 0.1)), name)
+    -- Create projectile one node away from origin.
+    local obj = minetest.add_entity(vector.add(def.pos, vector.normalize(def.velocity)), name)
     obj:setvelocity(def.velocity)
     obj:setacceleration(vector.new(0, -8.5 * (def.gravity or 0), 0))
     obj:set_armor_groups({immortal = 1})

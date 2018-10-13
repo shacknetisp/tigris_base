@@ -25,6 +25,11 @@ function tigris.danger_level(pos)
     return math.floor(vector.distance(pos, start) / scale) + add
 end
 
+-- Should be overridden by faction mods.
+function tigris.player_faction(name)
+    return "player:" .. name
+end
+
 tigris.world_limits = {
     max = vector.new(31000, 31000, 31000),
     min = vector.new(-31000, -31000, -31000),

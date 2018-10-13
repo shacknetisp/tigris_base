@@ -41,7 +41,7 @@ function m.friendly(a, b)
     local fa
     local fb
     if a:is_player() then
-        fa = tigris.player and tigris.player.faction(a:get_player_name()) or a:get_player_name()
+        fa = tigris.player_faction(a:get_player_name())
     elseif a:get_luaentity() and a:get_luaentity().tigris_mob then
         fa = a:get_luaentity().faction
     else
@@ -49,7 +49,7 @@ function m.friendly(a, b)
     end
 
     if b:is_player() then
-        fb = tigris.player and tigris.player.faction(b:get_player_name()) or b:get_player_name()
+        fb = tigris.player_faction(b:get_player_name())
     elseif b:get_luaentity() and b:get_luaentity().tigris_mob then
         fb = b:get_luaentity().faction
     else

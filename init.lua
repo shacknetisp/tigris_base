@@ -13,15 +13,15 @@ end
 
 -- Danger level increases by 1 every <x> distance from 0,0,0.
 local start = minetest.string_to_pos(minetest.settings:get("tigris.world_center")) or vector.new(0, 0, 0)
-local scale = tonumber(minetest.settings:get("tigris.level_scale")) or 500
-local udl = tonumber(minetest.settings:get("tigris.underground_danger_limit")) or -100
+local scale = tonumber(minetest.settings:get("tigris.level_scale")) or 250
+-- Scale y in distance by this much. So, going straight down, danger level increases faster.
+local y_scale = tonumber(minetest.settings:get("tigris.y_scale")) or 3
 
 function tigris.danger_level(pos)
+    pos = table.copy(pos)
     local add = 1
-    -- Being underground past the UDL adds 10 to the danger level.
-    if pos.y < udl then
-        add = add + 10
-    end
+    -- Going up does not add danger.
+    pos.y = math.min(0, pos.y * y_scale)
     return math.floor(vector.distance(pos, start) / scale) + add
 end
 

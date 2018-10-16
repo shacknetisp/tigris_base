@@ -7,6 +7,14 @@ m.handlers = {}
 -- Sorted list.
 m.list = {}
 
+function m.player_damage_callback(player, damage, blame)
+    -- Override elsewhere.
+end
+
+minetest.register_on_punchplayer(function(player, hitter, time, tool, dir, damage)
+    return m.player_damage_callback(player, damage, hitter)
+end)
+
 -- Damage player by table of damage types.
 function m.apply(obj, damage, blame)
     local lent = obj.get_luaentity and obj:get_luaentity()
@@ -25,7 +33,9 @@ function m.apply(obj, damage, blame)
 
     if obj:is_player() then
         -- Apply basic damage.
-        obj:set_hp(obj:get_hp() - total)
+        if not m.player_damage_callback(obj, damage, blame) then
+            obj:set_hp(obj:get_hp() - total)
+        end
     else
         if lent and lent.tigris_mob then
             obj:set_hp(obj:get_hp() - total)
@@ -63,6 +73,10 @@ function m.register(n, f)
     m.handlers[n] = f
     table.insert(m.list, n)
     table.sort(m.list)
+
+    if minetest.get_modpath("armor_monoid") and n ~= "fleshy" then
+        armor_monoid.register_armor_group(n, 100)
+    end
 end
 
 tigris.damage.register("fleshy", function(obj, value)
@@ -78,4 +92,9 @@ end)
 tigris.damage.register("heat", function(obj, value)
     local armor = obj:get_armor_groups()
     return value * ((armor.heat or 100) / 100)
+end)
+
+tigris.damage.register("sun", function(obj, value)
+    local armor = obj:get_armor_groups()
+    return value * ((armor.sun or 100) / 100)
 end)

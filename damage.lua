@@ -12,7 +12,7 @@ function m.player_damage_callback(player, damage, blame)
 end
 
 minetest.register_on_punchplayer(function(player, hitter, time, tool, dir, damage)
-    return m.player_damage_callback(player, damage, hitter)
+    m.player_damage_callback(player, damage, hitter)
 end)
 
 -- Damage player by table of damage types.
@@ -33,9 +33,8 @@ function m.apply(obj, damage, blame)
 
     if obj:is_player() then
         -- Apply basic damage.
-        if not m.player_damage_callback(obj, damage, blame) then
-            obj:set_hp(obj:get_hp() - total)
-        end
+        m.player_damage_callback(obj, damage, blame)
+        obj:set_hp(obj:get_hp() - total)
     else
         if lent and lent.tigris_mob then
             obj:set_hp(obj:get_hp() - total)

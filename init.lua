@@ -30,6 +30,11 @@ function tigris.player_faction(name)
     return "player:" .. name
 end
 
+-- Can be overridden. Return old value ORed by new value.
+function tigris.check_pos_safe(pos)
+    return false
+end
+
 tigris.world_limits = {
     max = vector.new(31000, 31000, 31000),
     min = vector.new(-31000, -31000, -31000),

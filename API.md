@@ -9,7 +9,6 @@
 
 # Damage
 * `tigris.damage.register(name, handler)`: Register a damage type [name]. [handler] is a function `function(obj, value)` called upon damaging [obj] through tigris.damage.apply(). [handler] should return the actual damage to be subtracted from [obj]'s hp by taking into account armor or other factors.
-* `tigris.damage.apply(`
 * `tigris.damage.player_damage_callback(player, damage, blame)`: May be overriden by other mods. Called upon damage from tigris.damage and the engine. [player] is the target of the damage. [damage] is a table `{raw = [total damage], groups = {fleshy = [fleshy damage], ...}}`. [blame], which may be `nil`, is the cause of the damage.
 * `tigris.damage.apply(obj, damage, blame)`: Apply [damage] to [obj], blaming [blame]. [obj] and [blame] are objects. [blame] may be `nil`. [damage] is in group format: `{fleshy = [fleshy damage], ...}`.
 

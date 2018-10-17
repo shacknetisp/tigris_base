@@ -15,6 +15,18 @@ minetest.register_on_punchplayer(function(player, hitter, time, tool, dir, damag
     m.player_damage_callback(player, {total = damage, groups = {fleshy = damage}}, hitter)
 end)
 
+minetest.register_on_player_hpchange(function(player, delta, reason)
+    if delta < 0 then
+        if ({
+            fall = true,
+            node_damage = true,
+            drown = true,
+        })[reason.type] then
+            m.player_damage_callback(player, {total = -delta, groups = {fleshy = -delta}})
+        end
+    end
+end)
+
 -- Damage player by table of damage types.
 function m.apply(obj, damage, blame)
     local lent = obj.get_luaentity and obj:get_luaentity()

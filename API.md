@@ -14,7 +14,7 @@
 
 # Projectiles
 * `tigris.register_projectile(name, def)`: Register a projectile. `<def>` fields below, usable default values in brackets:
-  * `texture`: The projectile's texture.
+  * `texture`: The projectile's texture string.
   * `size` [1]: The size multiplier for all coordinates.
   * `timeout` [30]: Time in seconds the projectile can be alive before timeout. Can be overriden after creation by setting `_timeout_override` in the lua entity.
   * `load_map` [false]: If true, will load and generate the map along the projectile's path so it can continue without being destroyed in unloaded blocks.

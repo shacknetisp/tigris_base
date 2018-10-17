@@ -1,0 +1,10 @@
+# Center point for danger level calculations.
+# Least dangerous point in world.
+tigris.world_center (Tigris world center) string 0,0,0
+
+# Danger level scaling.
+# Danger level will increase every <x> nodes from the world center.
+tigris.level_scale (Danger level scale) int 250
+
+# Multiplier for downward danger scaling.
+tigris.y_scale (Vertical danger level scale) int 3

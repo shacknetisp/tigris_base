@@ -38,4 +38,3 @@ tigris.world_limits = {
 tigris.include("hud.lua")
 tigris.include("damage.lua")
 tigris.include("projectiles.lua")
-tigris.include("smartfs_compat.lua")

@@ -46,9 +46,9 @@ function m.update(player, name, x)
         player:hud_change(hud, "text", x)
     elseif r.type == "bar" then
         if hudbar_mod == "hudbars" then
-            hb.change_hudbar(player, name, x.current, x.max)
+            hb.change_hudbar(player, name, r.current(player), r.max(player))
         else
-            player:hud_change(hud, "number", x.current * (20 / x.max))
+            player:hud_change(hud, "number", r.current(player) * (20 / r.max(player)))
         end
     end
 end
@@ -69,7 +69,7 @@ minetest.register_on_joinplayer(function(player)
             })
         elseif v.type == "bar" then
             if hudbar_mod == "hudbars" then
-                hb.init_hudbar(player, k, 0, 0)
+                hb.init_hudbar(player, v.name, v.current(player), v.max(player))
             else
                 m.values[k .. ":" .. player:get_player_name()] = player:hud_add({
                     name = v.name,
